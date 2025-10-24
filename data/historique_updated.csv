@@ -1,0 +1,7 @@
+Nom,Adresse,Ville,Metier_normalise,Date_introduction,Date_verification,Actif
+Jean Dupont,12 rue A,Paris,Boulanger_Patissier,2024-01-01,2025-10-13,Oui
+Marie Martin,34 rue B,Lyon,Plombier,2024-02-01,2024-07-01,Oui
+Paul Durand,56 rue C,Marseille,Médecin,2024-03-01,2024-08-01,Oui
+Sophie Bernard,78 rue D,Toulouse,Enseignant,2024-04-01,2025-10-13,Non
+Restaurant Le Gourmet,25 avenue Victor Hugo,Nice,Restaurant,2024-05-01,2024-10-01,Oui
+Luc Petit,90 rue E,Nantes,Avocat,2025-10-13,2025-10-13,Oui

@@ -1,0 +1,12 @@
+Nom,Adresse,Ville,Metier_normalise
+Jean Dupont,12 rue A,Paris,Boulanger_Patissier
+Marie Martin,34 rue B,Lyon,Plombier
+Paul Durand,56 rue C,Marseille,Médecin
+Sophie Bernard,78 rue D,Toulouse,Enseignant
+Luc Petit,90 rue E,Nantes,Avocat
+Emma Leroy,21 rue F,Strasbourg,INCONNU(ingenieur)
+Hugo Moreau,43 rue G,Bordeaux,INCONNU(architecte)
+Alice Simon,65 rue H,Lille,INCONNU(infirmier)
+Louis Lefevre,87 rue I,Rennes,Boulanger_Patissier
+Clara Rousseau,109 rue J,Reims,Boulanger_Patissier
+Clara Rousseau,109 rue J,Reims,Chauffeur

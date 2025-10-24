@@ -1,0 +1,28 @@
+Metier,Metier_normalise
+boulanger,Boulanger_Patissier
+patisserie, Boulanger_Patissier
+patissier, Boulanger_Patissier
+coiffeur,Coiffeur_Barbier
+barbier, Coiffeur_Barbier
+plombier,Plombier
+medecin,Médecin
+enseignant,Enseignant
+avocat,Avocat
+comptable,Comptable
+chauffeur,Chauffeur
+restaurant, Restaurant
+pharmacie,Pharmacien
+dentiste,Dentiste
+Boucherie,Boucherie_traiteur_rotisseur
+Traiteur,Boucherie_traiteur_rotisseur
+Primeur, Superette
+Poissonnerie,Poissonnerie
+Fromagerie, Fromagerie_Laiterie
+Laiterie, Fromagerie_Laiterie
+Caviste, Vin_Spritueux
+Superette, Superette
+Vin, Vin_Spritueux
+Notaire, Notaire
+Restaurant, Restaurant
+Epicerie fine, Superette
+Magasin bio, Superette
