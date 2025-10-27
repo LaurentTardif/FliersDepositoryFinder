@@ -1,0 +1,16 @@
+{
+    "recommendations": [
+        "ms-python.python",
+        "ms-python.flake8",
+        "ms-python.black-formatter",
+        "ms-python.isort",
+        "ms-python.mypy-type-checker",
+        "ms-vscode.test-adapter-converter",
+        "hbenl.vscode-test-explorer",
+        "littlefoxteam.vscode-python-test-adapter",
+        "donjayamanne.githistory",
+        "eamodio.gitlens",
+        "ms-vscode.vscode-github-issue-notebooks",
+        "github.vscode-pull-request-github"
+    ]
+}

@@ -1,0 +1,115 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "🧪 Debug: Lancer tous les tests",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/tests/run_all_tests.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONIOENCODING": "utf-8"
+            }
+        },
+        {
+            "name": "🔍 Debug: Vérifier qualité du code",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/check_quality.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONIOENCODING": "utf-8"
+            }
+        },
+        {
+            "name": "🎨 Debug: Formater le code",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/format_code.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "🏢 Debug: Filters.py",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/Filters.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "input.csv",
+                "output.csv"
+            ],
+            "env": {
+                "PYTHONIOENCODING": "utf-8"
+            }
+        },
+        {
+            "name": "📊 Debug: maj_historique.py",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/maj_historique.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "historique.csv",
+                "candidats.csv",
+                "historique_updated.csv"
+            ],
+            "env": {
+                "PYTHONIOENCODING": "utf-8"
+            }
+        },
+        {
+            "name": "🔍 Debug: recherche_entreprises.py",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/recherche_entreprises.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "metiers.csv",
+                "villes.csv",
+                "output.csv",
+                "--api-key",
+                "YOUR_API_KEY"
+            ],
+            "env": {
+                "PYTHONIOENCODING": "utf-8"
+            }
+        },
+        {
+            "name": "🧹 Debug: supprime_doublons.py",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/supprime_doublons.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "input.csv",
+                "output.csv"
+            ],
+            "env": {
+                "PYTHONIOENCODING": "utf-8"
+            }
+        },
+        {
+            "name": "📝 Debug: NormaliseMetiers.py",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/NormaliseMetiers.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "input.csv",
+                "output.csv",
+                "data/referencesMetiers.csv"
+            ],
+            "env": {
+                "PYTHONIOENCODING": "utf-8"
+            }
+        }
+    ]
+}

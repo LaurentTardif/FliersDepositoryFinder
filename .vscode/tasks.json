@@ -1,0 +1,193 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "🧪 Lancer tous les tests",
+            "type": "shell",
+            "command": "python",
+            "args": ["tests/run_all_tests.py"],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "options": {
+                "env": {
+                    "PYTHONIOENCODING": "utf-8"
+                }
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "🔍 Vérifier la qualité du code",
+            "type": "shell",
+            "command": "python",
+            "args": ["check_quality.py"],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "options": {
+                "env": {
+                    "PYTHONIOENCODING": "utf-8"
+                }
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "🎨 Formater le code automatiquement",
+            "type": "shell",
+            "command": "python",
+            "args": ["format_code.py"],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "📋 Tests Filters.py",
+            "type": "shell",
+            "command": "python",
+            "args": ["-m", "unittest", "tests.tests_filters.test_filters", "-v"],
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "options": {
+                "env": {
+                    "PYTHONIOENCODING": "utf-8"
+                }
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "📋 Tests maj_historique.py",
+            "type": "shell",
+            "command": "python",
+            "args": ["-m", "unittest", "tests.tests_maj_historique.test_maj_historique", "-v"],
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "options": {
+                "env": {
+                    "PYTHONIOENCODING": "utf-8"
+                }
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "📋 Tests recherche_entreprises.py",
+            "type": "shell",
+            "command": "python",
+            "args": ["-m", "unittest", "tests.tests_recherche_entreprises.test_recherche_entreprises", "-v"],
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "options": {
+                "env": {
+                    "PYTHONIOENCODING": "utf-8"
+                }
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "🔧 Flake8 - Vérifier la syntaxe",
+            "type": "shell",
+            "command": "python",
+            "args": ["-m", "flake8", ".", "--statistics"],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "🖤 Black - Formater le code",
+            "type": "shell",
+            "command": "python",
+            "args": ["-m", "black", "."],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "📦 isort - Organiser les imports",
+            "type": "shell",
+            "command": "python",
+            "args": ["-m", "isort", "."],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "🏷️ MyPy - Vérifier les types",
+            "type": "shell",
+            "command": "python",
+            "args": ["-m", "mypy", ".", "--ignore-missing-imports"],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": []
+        }
+    ]
+}
