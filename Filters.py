@@ -4,11 +4,12 @@ Script de filtrage des entreprises selon des règles métier
 Applique des règles pour marquer les entreprises à filtrer dans le champ 'Filtré'
 """
 
-import csv
-import sys
 import argparse
-from typing import Dict, List
+import csv
 import os
+import sys
+from typing import Dict, List
+
 
 def apply_filter_rules(record: Dict[str, str]) -> tuple[str, str]:
     """
@@ -28,10 +29,10 @@ def apply_filter_rules(record: Dict[str, str]) -> tuple[str, str]:
     """
     try:
         # Récupération des valeurs avec gestion des champs vides
-        nombre_avis = record.get('Nombre_avis', '').strip()
-        jours_fermeture = record.get('Jours_fermeture', '').strip()
-        note = record.get('Note', '').strip()
-        metier_normalise = record.get('Metier_normalise', '').strip()
+        nombre_avis = record.get("Nombre_avis", "").strip()
+        jours_fermeture = record.get("Jours_fermeture", "").strip()
+        note = record.get("Note", "").strip()
+        metier_normalise = record.get("Metier_normalise", "").strip()
 
         # Règle 1: Nombre d'avis < 20
         if nombre_avis:
@@ -82,6 +83,7 @@ def apply_filter_rules(record: Dict[str, str]) -> tuple[str, str]:
         print(f"⚠️  Erreur lors de l'application des règles pour {record.get('Nom', 'Inconnu')}: {e}")
         return ("NON", "Pas de filtre")
 
+
 def process_filter_file(input_file: str, output_file: str, verbose: bool = False):
     """
     Traite le fichier d'entrée et applique les règles de filtrage
@@ -103,7 +105,7 @@ def process_filter_file(input_file: str, output_file: str, verbose: bool = False
 
     try:
         # Lecture du fichier d'entrée
-        with open(input_file, 'r', encoding='utf-8') as infile:
+        with open(input_file, "r", encoding="utf-8") as infile:
             reader = csv.DictReader(infile)
             fieldnames = reader.fieldnames
 
@@ -112,7 +114,7 @@ def process_filter_file(input_file: str, output_file: str, verbose: bool = False
                 return
 
             # Vérifier que les colonnes requises sont présentes (elles doivent être créées par maj_historique)
-            required_columns = ['Filtré', 'Raison du filtre']
+            required_columns = ["Filtré", "Raison du filtre"]
             missing_columns = [col for col in required_columns if col not in fieldnames]
 
             if missing_columns:
@@ -140,14 +142,14 @@ def process_filter_file(input_file: str, output_file: str, verbose: bool = False
 
             # Traitement des enregistrements
             for record in records:
-                original_filtre = record.get('Filtré', 'NON')
+                original_filtre = record.get("Filtré", "NON")
 
                 # Application des règles métier
                 new_filtre, raison = apply_filter_rules(record)
 
                 # Mise à jour des champs
-                record['Filtré'] = new_filtre
-                record['Raison du filtre'] = raison
+                record["Filtré"] = new_filtre
+                record["Raison du filtre"] = raison
 
                 # Comptage pour les statistiques
                 if new_filtre == "OUI":
@@ -168,7 +170,7 @@ def process_filter_file(input_file: str, output_file: str, verbose: bool = False
                     print(f"🔄 {record.get('Nom', 'Inconnu')}: {original_filtre} → {new_filtre} ({raison})")
 
         # Écriture du fichier de sortie
-        with open(output_file, 'w', newline='', encoding='utf-8') as outfile:
+        with open(output_file, "w", newline="", encoding="utf-8") as outfile:
             writer = csv.DictWriter(outfile, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerows(records)
@@ -190,6 +192,7 @@ def process_filter_file(input_file: str, output_file: str, verbose: bool = False
     except Exception as e:
         print(f"❌ Erreur lors du traitement: {e}")
 
+
 def main():
     """Fonction principale"""
     parser = argparse.ArgumentParser(
@@ -205,27 +208,27 @@ Règles de filtrage appliquées:
 Exemples d'usage:
   python Filters.py historique.csv historique_filtre.csv
   python Filters.py historique.csv historique_filtre.csv --verbose
-        """
+        """,
     )
 
-    parser.add_argument('input_file', help='Fichier CSV d\'entrée (historique)')
-    parser.add_argument('output_file', help='Fichier CSV de sortie (historique filtré)')
-    parser.add_argument('--verbose', '-v', action='store_true',
-                       help='Afficher les détails du traitement')
+    parser.add_argument("input_file", help="Fichier CSV d'entrée (historique)")
+    parser.add_argument("output_file", help="Fichier CSV de sortie (historique filtré)")
+    parser.add_argument("--verbose", "-v", action="store_true", help="Afficher les détails du traitement")
 
     args = parser.parse_args()
 
     # Validation des arguments
-    if not args.input_file.endswith('.csv'):
+    if not args.input_file.endswith(".csv"):
         print("❌ Erreur: Le fichier d'entrée doit être un fichier CSV")
         sys.exit(1)
 
-    if not args.output_file.endswith('.csv'):
+    if not args.output_file.endswith(".csv"):
         print("❌ Erreur: Le fichier de sortie doit être un fichier CSV")
         sys.exit(1)
 
     # Traitement
     process_filter_file(args.input_file, args.output_file, args.verbose)
+
 
 if __name__ == "__main__":
     main()

@@ -1,9 +1,10 @@
-import unittest
-import subprocess
 import csv
 import os
+import subprocess
 import tempfile
+import unittest
 from pathlib import Path
+
 
 class TestSupprimeDoublons(unittest.TestCase):
 
@@ -22,27 +23,29 @@ class TestSupprimeDoublons(unittest.TestCase):
         self.assertTrue(input_file.exists(), f"Fichier d'entrée manquant: {input_file}")
         self.assertTrue(expected_output.exists(), f"Fichier de référence manquant: {expected_output}")
 
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False, encoding='utf-8') as temp_output:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False, encoding="utf-8") as temp_output:
             temp_output_path = temp_output.name
 
         try:
             # Exécution du script avec encodage UTF-8
-            result = subprocess.run([
-                'python', str(self.script),
-                str(input_file), temp_output_path
-            ], capture_output=True, text=True, encoding='utf-8', env=dict(os.environ, PYTHONIOENCODING='utf-8'))
+            result = subprocess.run(
+                ["python", str(self.script), str(input_file), temp_output_path],
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                env=dict(os.environ, PYTHONIOENCODING="utf-8"),
+            )
 
             self.assertEqual(result.returncode, 0, f"Erreur d'exécution: {result.stderr}")
 
             # Comparaison des résultats
-            with open(temp_output_path, 'r', encoding='utf-8') as f:
+            with open(temp_output_path, "r", encoding="utf-8") as f:
                 generated_content = list(csv.DictReader(f))
 
-            with open(expected_output, 'r', encoding='utf-8') as f:
+            with open(expected_output, "r", encoding="utf-8") as f:
                 expected_content = list(csv.DictReader(f))
 
-            self.assertEqual(len(generated_content), len(expected_content),
-                           "Le nombre de lignes ne correspond pas")
+            self.assertEqual(len(generated_content), len(expected_content), "Le nombre de lignes ne correspond pas")
 
             # Le fichier d'entrée avait 8 lignes (dont 3 doublons), le résultat devrait en avoir 5
             self.assertEqual(len(generated_content), 5, "Les doublons n'ont pas été supprimés correctement")
@@ -56,18 +59,21 @@ class TestSupprimeDoublons(unittest.TestCase):
         input_file = self.test_dir / "input_donnees_inconnues.csv"
         expected_output = self.test_dir / "output_donnees_inconnues.csv"
 
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False, encoding='utf-8') as temp_output:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False, encoding="utf-8") as temp_output:
             temp_output_path = temp_output.name
 
         try:
-            result = subprocess.run([
-                'python', str(self.script),
-                str(input_file), temp_output_path
-            ], capture_output=True, text=True, encoding='utf-8', env=dict(os.environ, PYTHONIOENCODING='utf-8'))
+            result = subprocess.run(
+                ["python", str(self.script), str(input_file), temp_output_path],
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                env=dict(os.environ, PYTHONIOENCODING="utf-8"),
+            )
 
             self.assertEqual(result.returncode, 0, f"Erreur d'exécution: {result.stderr}")
 
-            with open(temp_output_path, 'r', encoding='utf-8') as f:
+            with open(temp_output_path, "r", encoding="utf-8") as f:
                 generated_content = list(csv.DictReader(f))
 
             # Une seule ligne unique, donc aucune suppression
@@ -82,18 +88,21 @@ class TestSupprimeDoublons(unittest.TestCase):
         input_file = self.test_dir / "input_donnees_manquantes.csv"
         expected_output = self.test_dir / "output_donnees_manquantes.csv"
 
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False, encoding='utf-8') as temp_output:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False, encoding="utf-8") as temp_output:
             temp_output_path = temp_output.name
 
         try:
-            result = subprocess.run([
-                'python', str(self.script),
-                str(input_file), temp_output_path
-            ], capture_output=True, text=True, encoding='utf-8', env=dict(os.environ, PYTHONIOENCODING='utf-8'))
+            result = subprocess.run(
+                ["python", str(self.script), str(input_file), temp_output_path],
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                env=dict(os.environ, PYTHONIOENCODING="utf-8"),
+            )
 
             self.assertEqual(result.returncode, 0, f"Erreur d'exécution: {result.stderr}")
 
-            with open(temp_output_path, 'r', encoding='utf-8') as f:
+            with open(temp_output_path, "r", encoding="utf-8") as f:
                 generated_content = list(csv.DictReader(f))
 
             # Vérification que le script gère les données manquantes sans planter
@@ -103,5 +112,6 @@ class TestSupprimeDoublons(unittest.TestCase):
             if os.path.exists(temp_output_path):
                 os.unlink(temp_output_path)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

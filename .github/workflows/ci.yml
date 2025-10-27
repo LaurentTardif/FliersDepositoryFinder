@@ -1,0 +1,102 @@
+name: CI - Tests et Qualité du Code
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-and-lint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.9, 3.10, 3.11, 3.12]
+
+    steps:
+    - name: 📥 Récupération du code
+      uses: actions/checkout@v4
+
+    - name: 🐍 Configuration Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: 📦 Installation des dépendances
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 black isort mypy requests
+        # Installation des dépendances si requirements.txt existe
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+    - name: 🔍 Linting avec flake8
+      run: |
+        echo "🔍 Vérification de la qualité du code avec flake8..."
+        # Stop la construction si il y a des erreurs de syntaxe Python ou des noms non définis
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # Avertissements pour les autres problèmes (ne fait pas échouer la CI)
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+    - name: 🎨 Vérification du formatage avec Black
+      run: |
+        echo "🎨 Vérification du formatage du code avec Black..."
+        black --check --diff .
+
+    - name: 📋 Vérification des imports avec isort
+      run: |
+        echo "📋 Vérification de l'ordre des imports avec isort..."
+        isort --check-only --diff .
+
+    - name: 🏷️ Vérification des types avec mypy (optionnel)
+      run: |
+        echo "🏷️ Vérification des types avec mypy..."
+        # Exécution avec --ignore-missing-imports pour éviter les erreurs sur les modules externes
+        mypy . --ignore-missing-imports --python-version=${{ matrix.python-version }} || echo "⚠️ Avertissements mypy détectés"
+      continue-on-error: true
+
+    - name: 🧪 Exécution des tests
+      run: |
+        echo "🧪 Exécution de tous les tests..."
+        export PYTHONIOENCODING=utf-8
+        python tests/run_all_tests.py
+
+    - name: 📊 Rapport de couverture de tests (optionnel)
+      run: |
+        echo "📊 Installation et exécution de la couverture de tests..."
+        pip install coverage
+        export PYTHONIOENCODING=utf-8
+        coverage run tests/run_all_tests.py
+        coverage report
+        coverage xml
+      continue-on-error: true
+
+    - name: 📤 Upload des résultats de couverture
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+      continue-on-error: true
+
+  # Job séparé pour Windows (optionnel, car ton projet est développé sur Windows)
+  test-windows:
+    runs-on: windows-latest
+    steps:
+    - name: 📥 Récupération du code
+      uses: actions/checkout@v4
+
+    - name: 🐍 Configuration Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+
+    - name: 📦 Installation des dépendances
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests
+
+    - name: 🧪 Tests sur Windows
+      run: |
+        $env:PYTHONIOENCODING='utf-8'
+        python tests/run_all_tests.py

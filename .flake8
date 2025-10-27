@@ -1,0 +1,29 @@
+# Configuration pour flake8 (linter Python)
+[flake8]
+max-line-length = 127
+max-complexity = 10
+ignore =
+    # E203: whitespace before ':' (conflit avec black)
+    E203,
+    # W503: line break before binary operator (style préféré)
+    W503,
+    # E501: line too long (géré par black)
+    E501
+exclude =
+    .git,
+    __pycache__,
+    .venv,
+    venv,
+    env,
+    .env,
+    tests/__pycache__,
+    *.pyc
+
+# Chemins à vérifier
+filename = *.py
+
+# Affichage détaillé
+show-source = True
+show-pep8 = True
+statistics = True
+count = True

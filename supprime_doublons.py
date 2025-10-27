@@ -4,11 +4,12 @@ Script de suppression des doublons dans les fichiers CSV d'entreprises
 Supprime les lignes dupliquées basées sur les colonnes: Nom, Adresse, Ville, Metier
 """
 
-import csv
-import sys
 import argparse
-from typing import List, Dict, Set, Tuple
+import csv
 import hashlib
+import sys
+from typing import Dict, List, Set, Tuple
+
 
 def normalize_text(text: str) -> str:
     """
@@ -20,7 +21,8 @@ def normalize_text(text: str) -> str:
     Returns:
         Texte normalisé (minuscules, espaces supprimés)
     """
-    return text.strip().lower().replace('  ', ' ')
+    return text.strip().lower().replace("  ", " ")
+
 
 def create_record_hash(record: Dict[str, str]) -> str:
     """
@@ -33,19 +35,19 @@ def create_record_hash(record: Dict[str, str]) -> str:
         Hash MD5 de l'enregistrement normalisé
     """
     # Normalisation des champs clés
-    nom = normalize_text(record.get('Nom', ''))
-    adresse = normalize_text(record.get('Adresse', ''))
-    ville = normalize_text(record.get('Ville', ''))
-    metier = normalize_text(record.get('Metier_normalise', record.get('Metier', '')))
+    nom = normalize_text(record.get("Nom", ""))
+    adresse = normalize_text(record.get("Adresse", ""))
+    ville = normalize_text(record.get("Ville", ""))
+    metier = normalize_text(record.get("Metier_normalise", record.get("Metier", "")))
 
     # Création d'une clé composite
     composite_key = f"{nom}|{adresse}|{ville}|{metier}"
 
     # Génération du hash
-    return hashlib.md5(composite_key.encode('utf-8')).hexdigest()
+    return hashlib.md5(composite_key.encode("utf-8")).hexdigest()
 
-def are_similar_records(record1: Dict[str, str], record2: Dict[str, str],
-                       similarity_threshold: float = 0.9) -> bool:
+
+def are_similar_records(record1: Dict[str, str], record2: Dict[str, str], similarity_threshold: float = 0.9) -> bool:
     """
     Vérifie si deux enregistrements sont similaires (optionnel pour détection avancée)
 
@@ -59,6 +61,7 @@ def are_similar_records(record1: Dict[str, str], record2: Dict[str, str],
     """
     # Pour cette version, on utilise une correspondance exacte après normalisation
     return create_record_hash(record1) == create_record_hash(record2)
+
 
 def remove_duplicates(input_file: str, output_file: str, verbose: bool = False, sort_by: str = None) -> Tuple[int, int]:
     """
@@ -80,7 +83,7 @@ def remove_duplicates(input_file: str, output_file: str, verbose: bool = False, 
 
     try:
         # Lecture du fichier d'entrée
-        with open(input_file, 'r', encoding='utf-8') as file:
+        with open(input_file, "r", encoding="utf-8") as file:
             reader = csv.DictReader(file)
 
             # Détection automatique des colonnes d'entrée
@@ -91,7 +94,7 @@ def remove_duplicates(input_file: str, output_file: str, verbose: bool = False, 
             print(f"Colonnes détectées dans le fichier d'entrée: {input_fieldnames}")
 
             # Vérification des colonnes requises pour la détection de doublons
-            required_base_columns = {'Nom', 'Adresse', 'Ville'}
+            required_base_columns = {"Nom", "Adresse", "Ville"}
             if not required_base_columns.issubset(set(input_fieldnames)):
                 missing = required_base_columns - set(input_fieldnames)
                 print(f"Colonnes disponibles: {input_fieldnames}")
@@ -99,8 +102,8 @@ def remove_duplicates(input_file: str, output_file: str, verbose: bool = False, 
                 raise ValueError(f"Colonnes manquantes: {missing}")
 
             # Vérifier qu'on a au moins une colonne métier
-            has_metier = 'Metier' in input_fieldnames
-            has_metier_normalise = 'Metier_normalise' in input_fieldnames
+            has_metier = "Metier" in input_fieldnames
+            has_metier_normalise = "Metier_normalise" in input_fieldnames
             if not (has_metier or has_metier_normalise):
                 raise ValueError("Aucune colonne 'Metier' ou 'Metier_normalise' trouvée")
 
@@ -129,7 +132,7 @@ def remove_duplicates(input_file: str, output_file: str, verbose: bool = False, 
             if unique_records and sort_by in unique_records[0]:
                 if verbose:
                     print(f"📊 Tri des données par '{sort_by}'...")
-                unique_records = sorted(unique_records, key=lambda x: x.get(sort_by, '').lower())
+                unique_records = sorted(unique_records, key=lambda x: x.get(sort_by, "").lower())
                 if verbose:
                     print(f"   Premier: {unique_records[0].get(sort_by, '')}")
                     print(f"   Dernier: {unique_records[-1].get(sort_by, '')}")
@@ -141,13 +144,13 @@ def remove_duplicates(input_file: str, output_file: str, verbose: bool = False, 
         # Écriture du fichier de sortie avec toutes les colonnes détectées
         output_fieldnames = input_fieldnames  # Conserver toutes les colonnes d'entrée
 
-        with open(output_file, 'w', newline='', encoding='utf-8') as file:
+        with open(output_file, "w", newline="", encoding="utf-8") as file:
             writer = csv.DictWriter(file, fieldnames=output_fieldnames)
             writer.writeheader()
 
             for record in unique_records:
                 # Créer un enregistrement avec toutes les colonnes présentes
-                clean_record = {col: record.get(col, '') for col in output_fieldnames}
+                clean_record = {col: record.get(col, "") for col in output_fieldnames}
                 writer.writerow(clean_record)
 
         return total_records, len(unique_records)
@@ -158,6 +161,7 @@ def remove_duplicates(input_file: str, output_file: str, verbose: bool = False, 
     except Exception as e:
         print(f"Erreur lors du traitement: {e}")
         sys.exit(1)
+
 
 def analyze_duplicates(input_file: str):
     """
@@ -171,7 +175,7 @@ def analyze_duplicates(input_file: str):
     total_records = 0
 
     try:
-        with open(input_file, 'r', encoding='utf-8') as file:
+        with open(input_file, "r", encoding="utf-8") as file:
             reader = csv.DictReader(file)
 
             for record in reader:
@@ -204,6 +208,7 @@ def analyze_duplicates(input_file: str):
         print(f"Erreur lors de l'analyse: {e}")
         sys.exit(1)
 
+
 def main():
     parser = argparse.ArgumentParser(
         description="Suppression des doublons dans les fichiers CSV d'entreprises",
@@ -226,17 +231,16 @@ Cela inclut les nouvelles colonnes comme Heures_ouverture, Nombre_avis, Note, Jo
 
 Options de tri disponibles: toutes les colonnes détectées dans le fichier
 La normalisation supprime les espaces en trop et convertit en minuscules.
-        """
+        """,
     )
 
-    parser.add_argument('input_file', help='Fichier CSV d\'entrée')
-    parser.add_argument('output_file', nargs='?', help='Fichier CSV de sortie (requis sauf avec --analyze)')
-    parser.add_argument('--verbose', '-v', action='store_true',
-                       help='Affichage détaillé des opérations')
-    parser.add_argument('--analyze', '-a', action='store_true',
-                       help='Mode analyse: affiche les statistiques sans créer de fichier de sortie')
-    parser.add_argument('--sort', '-s', metavar='COLUMN',
-                       help='Trier les résultats par colonne (ex: Nom, Ville, Metier)')
+    parser.add_argument("input_file", help="Fichier CSV d'entrée")
+    parser.add_argument("output_file", nargs="?", help="Fichier CSV de sortie (requis sauf avec --analyze)")
+    parser.add_argument("--verbose", "-v", action="store_true", help="Affichage détaillé des opérations")
+    parser.add_argument(
+        "--analyze", "-a", action="store_true", help="Mode analyse: affiche les statistiques sans créer de fichier de sortie"
+    )
+    parser.add_argument("--sort", "-s", metavar="COLUMN", help="Trier les résultats par colonne (ex: Nom, Ville, Metier)")
 
     args = parser.parse_args()
 
@@ -269,6 +273,7 @@ La normalisation supprime les espaces en trop et convertit en minuscules.
         if total > 0:
             reduction_percent = (duplicates_removed / total) * 100
             print(f"   Réduction: {reduction_percent:.1f}%")
+
 
 if __name__ == "__main__":
     main()

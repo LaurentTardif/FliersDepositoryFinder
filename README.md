@@ -2,6 +2,8 @@
 
 Ce projet contient un ensemble de scripts Python conçus pour être utilisés de manière séquentielle et indépendante dans le processus de collecte, normalisation et filtrage d'informations d'entreprises.
 
+![CI Status](https://github.com/LaurentTardif/FliersDepositoryFinder/workflows/CI%20-%20Tests%20et%20Qualité%20du%20Code/badge.svg)
+
 ## Workflow des scripts
 
 Les scripts sont pensés pour être appelés à la suite les uns des autres, de manière indépendante :
@@ -198,3 +200,41 @@ Chaque dossier de test contient :
 - **Fichiers d'entrée** avec différents scénarios (nominal, données inconnues, données manquantes)
 - **Fichiers de référence** avec les résultats attendus
 - **Script de test** qui compare les résultats générés aux références
+
+## 🚀 CI/CD et Qualité du Code
+
+Ce projet utilise **GitHub Actions** pour garantir la qualité du code à chaque commit.
+
+### Outils de qualité disponibles
+
+```bash
+# Vérifier la qualité du code avant commit
+python check_quality.py
+
+# Formater automatiquement le code
+python format_code.py
+
+# Lancer tous les tests (31 tests)
+python tests/run_all_tests.py
+```
+
+### Workflow automatique
+
+À chaque push sur GitHub, les actions suivantes sont exécutées :
+
+- ✅ **Tests unitaires** (31 tests)
+- ✅ **Linting** (flake8)
+- ✅ **Formatage** (Black)
+- ✅ **Imports** (isort)
+- ✅ **Types** (mypy)
+- ✅ **Couverture** de tests
+
+### Configuration des outils
+
+- **Longueur de ligne** : 127 caractères
+- **Style** : Black formatter
+- **Linting** : flake8 avec règles PEP 8
+- **Tests** : unittest avec coverage
+- **Environnements** : Python 3.9-3.12
+
+Voir `docs/CI_CD_SETUP.md` pour plus de détails.

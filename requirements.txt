@@ -1,0 +1,19 @@
+# Dépendances principales du projet
+requests>=2.25.0
+
+# Outils de développement et qualité de code
+flake8>=6.0.0
+black>=23.0.0
+isort>=5.12.0
+mypy>=1.0.0
+
+# Outils de test et couverture
+coverage>=7.0.0
+
+# Documentation des dépendances :
+# - requests: Pour les appels à l'API Google Places
+# - flake8: Linter pour vérifier la qualité du code
+# - black: Formateur automatique de code Python
+# - isort: Organisation automatique des imports
+# - mypy: Vérification statique des types
+# - coverage: Mesure de la couverture de tests

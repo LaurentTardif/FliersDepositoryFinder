@@ -3,9 +3,10 @@
 Script pour exécuter tous les tests du projet FliersDepositoryFinder
 """
 
-import unittest
 import sys
+import unittest
 from pathlib import Path
+
 
 def run_all_tests():
     """Exécute tous les tests du projet"""
@@ -15,7 +16,7 @@ def run_all_tests():
 
     # Découverte automatique des tests
     loader = unittest.TestLoader()
-    suite = loader.discover(str(tests_dir), pattern='test_*.py')
+    suite = loader.discover(str(tests_dir), pattern="test_*.py")
 
     # Exécution des tests
     runner = unittest.TextTestRunner(verbosity=2)
@@ -24,6 +25,7 @@ def run_all_tests():
     # Code de sortie basé sur le succès des tests
     return 0 if result.wasSuccessful() else 1
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     exit_code = run_all_tests()
     sys.exit(exit_code)

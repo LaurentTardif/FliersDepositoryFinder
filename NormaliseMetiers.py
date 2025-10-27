@@ -1,14 +1,16 @@
 import csv
 import sys
 
+
 def charger_metiers_reference(fichier_reference):
     metiers = {}
-    with open(fichier_reference, newline='', encoding='utf-8') as ref_file:
+    with open(fichier_reference, newline="", encoding="utf-8") as ref_file:
         reader = csv.reader(ref_file)
         for row in reader:
             if len(row) >= 2:
                 metiers[row[0].strip().lower()] = row[1].strip()
     return metiers
+
 
 def convertir_csv(fichier_entree, fichier_sortie, fichier_reference):
     metiers_ref = charger_metiers_reference(fichier_reference)
@@ -18,8 +20,10 @@ def convertir_csv(fichier_entree, fichier_sortie, fichier_reference):
     metiers_normalises = 0
     metiers_non_traites = 0
 
-    with open(fichier_entree, newline='', encoding='utf-8') as csv_in, \
-         open(fichier_sortie, 'w', newline='', encoding='utf-8') as csv_out:
+    with (
+        open(fichier_entree, newline="", encoding="utf-8") as csv_in,
+        open(fichier_sortie, "w", newline="", encoding="utf-8") as csv_out,
+    ):
         reader = csv.DictReader(csv_in)
 
         # Détection automatique des colonnes d'entrée
@@ -33,16 +37,16 @@ def convertir_csv(fichier_entree, fichier_sortie, fichier_reference):
         # Création des colonnes de sortie : toutes les colonnes d'entrée + Metier_normalise
         output_fieldnames = []
         for field in input_fieldnames:
-            if field != 'Metier':  # On garde toutes les colonnes sauf Metier
+            if field != "Metier":  # On garde toutes les colonnes sauf Metier
                 output_fieldnames.append(field)
-        output_fieldnames.append('Metier_normalise')  # On ajoute la colonne normalisée
+        output_fieldnames.append("Metier_normalise")  # On ajoute la colonne normalisée
 
         writer = csv.DictWriter(csv_out, fieldnames=output_fieldnames)
         writer.writeheader()
 
         for row in reader:
             lignes_lues += 1
-            metier = row.get('Metier', '').strip().lower()
+            metier = row.get("Metier", "").strip().lower()
 
             if metier in metiers_ref:
                 metier_normalise = metiers_ref[metier]
@@ -54,10 +58,10 @@ def convertir_csv(fichier_entree, fichier_sortie, fichier_reference):
             # Création de la ligne de sortie avec toutes les colonnes conservées
             output_row = {}
             for field in output_fieldnames:
-                if field == 'Metier_normalise':
+                if field == "Metier_normalise":
                     output_row[field] = metier_normalise
                 elif field in input_fieldnames:
-                    output_row[field] = row.get(field, '')
+                    output_row[field] = row.get(field, "")
 
             writer.writerow(output_row)
 
@@ -70,6 +74,7 @@ def convertir_csv(fichier_entree, fichier_sortie, fichier_reference):
     if lignes_lues > 0:
         pourcentage_normalise = (metiers_normalises / lignes_lues) * 100
         print(f"   Taux de normalisation: {pourcentage_normalise:.1f}%")
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 4:

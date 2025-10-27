@@ -1,9 +1,11 @@
+import argparse
 import csv
 import sys
 import time
+from typing import Dict, List, Tuple
+
 import requests
-from typing import List, Dict, Tuple
-import argparse
+
 
 class GooglePlacesSearcher:
     """Classe pour rechercher des entreprises via Google Places API"""
@@ -13,11 +15,13 @@ class GooglePlacesSearcher:
         self.base_url = "https://places.googleapis.com/v1/places:searchText"
         self.session = requests.Session()
         # Configuration des headers pour la nouvelle API
-        self.session.headers.update({
-            'Content-Type': 'application/json',
-            'X-Goog-Api-Key': api_key,
-            'X-Goog-FieldMask': 'places.displayName,places.formattedAddress,places.addressComponents,places.location,places.currentOpeningHours,places.rating,places.userRatingCount,places.regularOpeningHours'
-        })
+        self.session.headers.update(
+            {
+                "Content-Type": "application/json",
+                "X-Goog-Api-Key": api_key,
+                "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.addressComponents,places.location,places.currentOpeningHours,places.rating,places.userRatingCount,places.regularOpeningHours",
+            }
+        )
 
     def test_api_key(self) -> bool:
         """
@@ -29,18 +33,14 @@ class GooglePlacesSearcher:
         print("🔍 Test de la clé API...")
 
         # Test simple avec une recherche basique pour la nouvelle API
-        payload = {
-            "textQuery": "restaurant Grenoble",
-            "languageCode": "fr",
-            "maxResultCount": 1
-        }
+        payload = {"textQuery": "restaurant Grenoble", "languageCode": "fr", "maxResultCount": 1}
 
         try:
             response = self.session.post(self.base_url, json=payload)
 
             if response.status_code == 200:
                 data = response.json()
-                places = data.get('places', [])
+                places = data.get("places", [])
                 if places:
                     print("✅ Clé API valide et fonctionnelle")
                     return True
@@ -60,7 +60,7 @@ class GooglePlacesSearcher:
                 print(f"❌ Erreur HTTP {response.status_code}")
                 try:
                     error_data = response.json()
-                    if 'error' in error_data:
+                    if "error" in error_data:
                         print(f"Message: {error_data['error'].get('message', 'Pas de détails')}")
                 except:
                     print(f"Réponse: {response.text[:200]}")
@@ -102,11 +102,7 @@ class GooglePlacesSearcher:
             page_size = min(remaining, 20)  # Max 20 par page
 
             # Payload pour la nouvelle API Places
-            payload = {
-                "textQuery": query,
-                "languageCode": "fr",
-                "pageSize": page_size
-            }
+            payload = {"textQuery": query, "languageCode": "fr", "pageSize": page_size}
 
             # Ajouter le token de pagination si disponible
             if next_page_token:
@@ -131,7 +127,7 @@ class GooglePlacesSearcher:
 
                     try:
                         error_data = response.json()
-                        if 'error' in error_data:
+                        if "error" in error_data:
                             print(f"Message d'erreur: {error_data['error'].get('message', 'Pas de détails')}")
                     except:
                         print(f"Réponse brute: {response.text[:200]}")
@@ -139,7 +135,7 @@ class GooglePlacesSearcher:
                     break
 
                 data = response.json()
-                places = data.get('places', [])
+                places = data.get("places", [])
 
                 # Traitement des résultats de cette page
                 for place in places:
@@ -149,7 +145,7 @@ class GooglePlacesSearcher:
                         total_collected += 1
 
                 # Vérifier s'il y a une page suivante
-                next_page_token = data.get('nextPageToken')
+                next_page_token = data.get("nextPageToken")
                 print("le next page token vaut :", next_page_token)
 
                 # Si pas de token ou pas de nouveaux résultats, arrêter
@@ -181,29 +177,29 @@ class GooglePlacesSearcher:
             Dictionnaire avec les informations de l'entreprise
         """
         # Extraction du nom depuis la nouvelle API
-        name = place.get('displayName', {}).get('text', '')
+        name = place.get("displayName", {}).get("text", "")
 
         # Extraction de l'adresse formatée
-        address = place.get('formattedAddress', '')
+        address = place.get("formattedAddress", "")
 
         # Extraction de la ville depuis les composants d'adresse
         ville = self._extract_city_new_api(place)
 
         # Extraction des nouveaux champs
         heures_ouverture = self._extract_opening_hours(place)
-        nombre_avis = place.get('userRatingCount', 0)
-        note = place.get('rating', 0.0)
+        nombre_avis = place.get("userRatingCount", 0)
+        note = place.get("rating", 0.0)
         jours_fermeture = self._extract_closure_days(place)
 
         return {
-            'Nom': name,
-            'Adresse': address,
-            'Ville': ville,
-            'Metier': metier_recherche,
-            'Heures_ouverture': heures_ouverture,
-            'Nombre_avis': nombre_avis,
-            'Note': note,
-            'Jours_fermeture': jours_fermeture
+            "Nom": name,
+            "Adresse": address,
+            "Ville": ville,
+            "Metier": metier_recherche,
+            "Heures_ouverture": heures_ouverture,
+            "Nombre_avis": nombre_avis,
+            "Note": note,
+            "Jours_fermeture": jours_fermeture,
         }
 
     def _extract_business_info(self, place: Dict, metier_recherche: str) -> Dict:
@@ -218,20 +214,20 @@ class GooglePlacesSearcher:
             Dictionnaire avec les informations de l'entreprise
         """
         # Extraction de l'adresse formatée
-        address = place.get('formatted_address', '')
+        address = place.get("formatted_address", "")
 
         # Extraction de la ville depuis l'adresse ou les composants d'adresse
         ville = self._extract_city(place)
 
         return {
-            'Nom': place.get('name', ''),
-            'Adresse': address,
-            'Ville': ville,
-            'Metier': metier_recherche,
-            'Heures_ouverture': 'Non disponible (ancienne API)',
-            'Nombre_avis': 0,
-            'Note': 0.0,
-            'Jours_fermeture': 0
+            "Nom": place.get("name", ""),
+            "Adresse": address,
+            "Ville": ville,
+            "Metier": metier_recherche,
+            "Heures_ouverture": "Non disponible (ancienne API)",
+            "Nombre_avis": 0,
+            "Note": 0.0,
+            "Jours_fermeture": 0,
         }
 
     def _extract_city_new_api(self, place: Dict) -> str:
@@ -245,25 +241,27 @@ class GooglePlacesSearcher:
             Nom de la ville
         """
         # Recherche dans les composants d'adresse de la nouvelle API
-        address_components = place.get('addressComponents', [])
+        address_components = place.get("addressComponents", [])
         for component in address_components:
-            types = component.get('types', [])
-            if 'locality' in types:
-                return component.get('longText', '')
-            elif 'administrative_area_level_2' in types and not any('locality' in comp.get('types', []) for comp in address_components):
-                return component.get('longText', '')
+            types = component.get("types", [])
+            if "locality" in types:
+                return component.get("longText", "")
+            elif "administrative_area_level_2" in types and not any(
+                "locality" in comp.get("types", []) for comp in address_components
+            ):
+                return component.get("longText", "")
 
         # Fallback: extraction depuis l'adresse formatée
-        formatted_address = place.get('formattedAddress', '')
+        formatted_address = place.get("formattedAddress", "")
         if formatted_address:
-            parts = formatted_address.split(', ')
+            parts = formatted_address.split(", ")
             for part in parts:
-                if part and not part.isdigit() and 'France' not in part:
+                if part and not part.isdigit() and "France" not in part:
                     # Exclure les codes postaux et le nom du pays
                     if not any(char.isdigit() for char in part) or len(part) > 5:
                         return part
 
-        return ''
+        return ""
 
     def _extract_city(self, place: Dict) -> str:
         """
@@ -276,25 +274,27 @@ class GooglePlacesSearcher:
             Nom de la ville
         """
         # Recherche dans les composants d'adresse
-        address_components = place.get('address_components', [])
+        address_components = place.get("address_components", [])
         for component in address_components:
-            types = component.get('types', [])
-            if 'locality' in types:
-                return component.get('long_name', '')
-            elif 'administrative_area_level_2' in types and not any('locality' in comp.get('types', []) for comp in address_components):
-                return component.get('long_name', '')
+            types = component.get("types", [])
+            if "locality" in types:
+                return component.get("long_name", "")
+            elif "administrative_area_level_2" in types and not any(
+                "locality" in comp.get("types", []) for comp in address_components
+            ):
+                return component.get("long_name", "")
 
         # Fallback: extraction depuis l'adresse formatée
-        formatted_address = place.get('formatted_address', '')
+        formatted_address = place.get("formatted_address", "")
         if formatted_address:
-            parts = formatted_address.split(', ')
+            parts = formatted_address.split(", ")
             for part in parts:
-                if part and not part.isdigit() and 'France' not in part:
+                if part and not part.isdigit() and "France" not in part:
                     # Exclure les codes postaux et le nom du pays
                     if not any(char.isdigit() for char in part) or len(part) > 5:
                         return part
 
-        return ''
+        return ""
 
     def _extract_opening_hours(self, place: Dict) -> str:
         """
@@ -307,20 +307,20 @@ class GooglePlacesSearcher:
             String formatée des heures d'ouverture
         """
         # Essayer d'abord les heures actuelles
-        current_hours = place.get('currentOpeningHours', {})
+        current_hours = place.get("currentOpeningHours", {})
         if current_hours:
-            weekday_descriptions = current_hours.get('weekdayDescriptions', [])
+            weekday_descriptions = current_hours.get("weekdayDescriptions", [])
             if weekday_descriptions:
-                return '; '.join(weekday_descriptions)
+                return "; ".join(weekday_descriptions)
 
         # Fallback sur les heures régulières
-        regular_hours = place.get('regularOpeningHours', {})
+        regular_hours = place.get("regularOpeningHours", {})
         if regular_hours:
-            weekday_descriptions = regular_hours.get('weekdayDescriptions', [])
+            weekday_descriptions = regular_hours.get("weekdayDescriptions", [])
             if weekday_descriptions:
-                return '; '.join(weekday_descriptions)
+                return "; ".join(weekday_descriptions)
 
-        return 'Non disponible'
+        return "Non disponible"
 
     def _extract_closure_days(self, place: Dict) -> int:
         """
@@ -333,19 +333,19 @@ class GooglePlacesSearcher:
             Nombre de jours de fermeture (0-7)
         """
         # Essayer d'abord les heures actuelles
-        current_hours = place.get('currentOpeningHours', {})
+        current_hours = place.get("currentOpeningHours", {})
         if not current_hours:
             # Fallback sur les heures régulières
-            current_hours = place.get('regularOpeningHours', {})
+            current_hours = place.get("regularOpeningHours", {})
 
         if current_hours:
-            periods = current_hours.get('periods', [])
+            periods = current_hours.get("periods", [])
             if periods:
                 # Compter les jours où il n'y a pas de période d'ouverture
                 open_days = set()
                 for period in periods:
-                    if 'open' in period:
-                        day = period['open'].get('day', 0)
+                    if "open" in period:
+                        day = period["open"].get("day", 0)
                         open_days.add(day)
 
                 # Il y a 7 jours dans la semaine (0=Dimanche, 1=Lundi, ..., 6=Samedi)
@@ -353,6 +353,7 @@ class GooglePlacesSearcher:
                 return total_days - len(open_days)
 
         return 0  # Par défaut, supposer ouvert tous les jours si pas d'info
+
 
 def load_csv_column(filepath: str, column_name: str) -> List[str]:
     """
@@ -367,10 +368,10 @@ def load_csv_column(filepath: str, column_name: str) -> List[str]:
     """
     values = []
     try:
-        with open(filepath, 'r', encoding='utf-8') as file:
+        with open(filepath, "r", encoding="utf-8") as file:
             reader = csv.DictReader(file)
             for row in reader:
-                value = row.get(column_name, '').strip()
+                value = row.get(column_name, "").strip()
                 if value:
                     values.append(value)
     except FileNotFoundError:
@@ -382,6 +383,7 @@ def load_csv_column(filepath: str, column_name: str) -> List[str]:
 
     return values
 
+
 def save_results_to_csv(businesses: List[Dict], output_file: str):
     """
     Sauvegarde les résultats dans un fichier CSV
@@ -390,10 +392,10 @@ def save_results_to_csv(businesses: List[Dict], output_file: str):
         businesses: Liste des entreprises trouvées
         output_file: Chemin du fichier de sortie
     """
-    fieldnames = ['Nom', 'Adresse', 'Ville', 'Metier', 'Heures_ouverture', 'Nombre_avis', 'Note', 'Jours_fermeture']
+    fieldnames = ["Nom", "Adresse", "Ville", "Metier", "Heures_ouverture", "Nombre_avis", "Note", "Jours_fermeture"]
 
     try:
-        with open(output_file, 'w', newline='', encoding='utf-8') as file:
+        with open(output_file, "w", newline="", encoding="utf-8") as file:
             writer = csv.DictWriter(file, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerows(businesses)
@@ -403,6 +405,7 @@ def save_results_to_csv(businesses: List[Dict], output_file: str):
     except Exception as e:
         print(f"Erreur lors de la sauvegarde: {e}")
         sys.exit(1)
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -416,19 +419,21 @@ Exemples d'utilisation:
 Format des fichiers CSV d'entrée:
   metiers.csv: doit contenir une colonne 'Metier'
   villes.csv: doit contenir une colonne 'Ville'
-        """
+        """,
     )
 
-    parser.add_argument('metiers_file', help='Fichier CSV contenant la liste des métiers (colonne: Metier)')
-    parser.add_argument('villes_file', help='Fichier CSV contenant la liste des villes (colonne: Ville)')
-    parser.add_argument('output_file', help='Fichier CSV de sortie')
-    parser.add_argument('--api-key', required=True, help='Clé API Google Places')
-    parser.add_argument('--max-per-search', type=int, default=20,
-                       help='Nombre maximum de résultats par recherche (défaut: 20, maximum: 60 avec pagination)')
-    parser.add_argument('--delay', type=float, default=0.1,
-                       help='Délai entre les requêtes en secondes (défaut: 0.1)')
-    parser.add_argument('--verbose', '-v', action='store_true',
-                       help='Affichage détaillé des informations récupérées')
+    parser.add_argument("metiers_file", help="Fichier CSV contenant la liste des métiers (colonne: Metier)")
+    parser.add_argument("villes_file", help="Fichier CSV contenant la liste des villes (colonne: Ville)")
+    parser.add_argument("output_file", help="Fichier CSV de sortie")
+    parser.add_argument("--api-key", required=True, help="Clé API Google Places")
+    parser.add_argument(
+        "--max-per-search",
+        type=int,
+        default=20,
+        help="Nombre maximum de résultats par recherche (défaut: 20, maximum: 60 avec pagination)",
+    )
+    parser.add_argument("--delay", type=float, default=0.1, help="Délai entre les requêtes en secondes (défaut: 0.1)")
+    parser.add_argument("--verbose", "-v", action="store_true", help="Affichage détaillé des informations récupérées")
 
     args = parser.parse_args()
 
@@ -443,8 +448,8 @@ Format des fichiers CSV d'entrée:
 
     # Chargement des données d'entrée
     print("Chargement des fichiers d'entrée...")
-    metiers = load_csv_column(args.metiers_file, 'Metier')
-    villes = load_csv_column(args.villes_file, 'Ville')
+    metiers = load_csv_column(args.metiers_file, "Metier")
+    villes = load_csv_column(args.villes_file, "Ville")
 
     print(f"Métiers chargés: {len(metiers)}")
     print(f"Villes chargées: {len(villes)}")
@@ -489,7 +494,9 @@ Format des fichiers CSV d'entrée:
             # Affichage détaillé si mode verbose activé
             if args.verbose and businesses:
                 for business in businesses:
-                    print(f"    • {business.get('Nom', 'N/A')} - Note: {business.get('Note', 'N/A')}/5 ({business.get('Nombre_avis', 'N/A')} avis)")
+                    print(
+                        f"    • {business.get('Nom', 'N/A')} - Note: {business.get('Note', 'N/A')}/5 ({business.get('Nombre_avis', 'N/A')} avis)"
+                    )
 
             # Délai entre les requêtes pour respecter les limites de l'API
             if current_search < total_searches:
@@ -501,9 +508,12 @@ Format des fichiers CSV d'entrée:
     print(f"   • Total de pages suivantes utilisées : {total_pagination_calls}")
     print(f"   • Requêtes de pagination effectuées : {total_pagination_calls}")
     if total_pagination_calls > 0:
-        print(f"   • Économie sans pagination : {len(all_businesses) - (total_searches * 20)} entreprises supplémentaires récupérées")
+        print(
+            f"   • Économie sans pagination : {len(all_businesses) - (total_searches * 20)} entreprises supplémentaires récupérées"
+        )
 
     save_results_to_csv(all_businesses, args.output_file)
+
 
 if __name__ == "__main__":
     main()
