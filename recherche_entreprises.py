@@ -19,7 +19,7 @@ class GooglePlacesSearcher:
             {
                 "Content-Type": "application/json",
                 "X-Goog-Api-Key": api_key,
-                "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.addressComponents,places.location,places.currentOpeningHours,places.rating,places.userRatingCount,places.regularOpeningHours",
+                "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.location,places.types,places.rating,places.userRatingCount,places.nationalPhoneNumber,places.websiteUri",
             }
         )
 
@@ -33,7 +33,7 @@ class GooglePlacesSearcher:
         print("🔍 Test de la clé API...")
 
         # Test simple avec une recherche basique pour la nouvelle API
-        payload = {"textQuery": "restaurant Grenoble", "languageCode": "fr", "maxResultCount": 1}
+        payload = {"textQuery": "restaurant Paris", "maxResultCount": 1}
 
         try:
             response = self.session.post(self.base_url, json=payload)
@@ -75,95 +75,84 @@ class GooglePlacesSearcher:
 
     def search_businesses(self, metier: str, ville: str, max_results: int = 20) -> Tuple[List[Dict], int]:
         """
-        Recherche des entreprises pour un métier dans une ville donnée avec pagination
+        Recherche des entreprises pour un métier dans une ville donnée
+
+        IMPORTANT: La nouvelle API Google Places Text Search ne supporte PAS la pagination traditionnelle.
+        Elle est limitée à 20 résultats maximum par requête textuelle.
+        Pour obtenir plus de résultats, il faut faire plusieurs requêtes avec des termes différents.
 
         Args:
             metier: Le type d'entreprise à rechercher
             ville: La ville où chercher
-            max_results: Nombre maximum de résultats par recherche (max 60 avec pagination)
+            max_results: Nombre maximum de résultats par recherche (limité à 20 par l'API)
 
         Returns:
-            Tuple contenant (liste des entreprises trouvées, nombre de pages suivantes utilisées)
+            Tuple contenant (liste des entreprises trouvées, nombre de requêtes effectuées)
         """
         businesses = []
-        next_page_token = None
-        pagination_count = 0
+        request_count = 0
 
-        # Limite maximale de l'API : 60 résultats au total
-        max_results = min(max_results, 60)
-        total_collected = 0
+        # L'API Text Search est limitée à 20 résultats maximum
+        max_results = min(max_results, 20)
 
         # Construction de la requête de recherche pour la nouvelle API
         query = f"{metier} in {ville}, France"
 
-        while total_collected < max_results:
-            # Calculer combien de résultats demander pour cette page
-            remaining = max_results - total_collected
-            page_size = min(remaining, 20)  # Max 20 par page
+        print(f"🔍 Recherche: '{query}' (max {max_results} résultats)")
 
-            # Payload pour la nouvelle API Places
-            payload = {"textQuery": query, "languageCode": "fr", "pageSize": page_size}
+        # Payload pour la nouvelle API Places
+        payload = {
+            "textQuery": query,
+            "languageCode": "fr",
+            "maxResultCount": max_results
+        }
 
-            # Ajouter le token de pagination si disponible
-            if next_page_token:
-                payload["pageToken"] = next_page_token
-                pagination_count += 1
-                print(f"    🔄 Page suivante {pagination_count + 1} (pagination)")
+        try:
+            # Recherche avec la nouvelle API
+            response = self.session.post(self.base_url, json=payload)
+            request_count += 1
 
-            try:
-                # Recherche avec la nouvelle API
-                response = self.session.post(self.base_url, json=payload)
+            if response.status_code != 200:
+                print(f"Erreur HTTP {response.status_code} pour {metier} à {ville}")
 
-                if response.status_code != 200:
-                    print(f"Erreur HTTP {response.status_code} pour {metier} à {ville}")
+                if response.status_code == 403:
+                    print("\n🚨 ERREUR 403 FORBIDDEN - Vérifiez :")
+                    print("1. Votre clé API est-elle valide ?")
+                    print("2. La nouvelle API Places est-elle activée dans Google Cloud Console ?")
+                    print("3. Y a-t-il des restrictions d'IP ou de domaine ?")
+                    print("4. Avez-vous des crédits disponibles ?")
+                    print("5. URL: https://console.cloud.google.com/apis/library/places-backend.googleapis.com")
 
-                    if response.status_code == 403:
-                        print("\n🚨 ERREUR 403 FORBIDDEN - Vérifiez :")
-                        print("1. Votre clé API est-elle valide ?")
-                        print("2. La nouvelle API Places est-elle activée dans Google Cloud Console ?")
-                        print("3. Y a-t-il des restrictions d'IP ou de domaine ?")
-                        print("4. Avez-vous des crédits disponibles ?")
-                        print("5. URL: https://console.cloud.google.com/apis/library/places-backend.googleapis.com")
+                try:
+                    error_data = response.json()
+                    if "error" in error_data:
+                        print(f"Message d'erreur: {error_data['error'].get('message', 'Pas de détails')}")
+                except:
+                    print(f"Réponse brute: {response.text[:200]}")
 
-                    try:
-                        error_data = response.json()
-                        if "error" in error_data:
-                            print(f"Message d'erreur: {error_data['error'].get('message', 'Pas de détails')}")
-                    except:
-                        print(f"Réponse brute: {response.text[:200]}")
+                return businesses, request_count
 
-                    break
+            data = response.json()
+            places = data.get("places", [])
 
-                data = response.json()
-                places = data.get("places", [])
+            # Traitement des résultats
+            for place in places:
+                business = self._extract_business_info_new_api(place, metier)
+                if business:
+                    businesses.append(business)
 
-                # Traitement des résultats de cette page
-                for place in places:
-                    business = self._extract_business_info_new_api(place, metier)
-                    if business:
-                        businesses.append(business)
-                        total_collected += 1
+            print(f"📊 Résultats trouvés: {len(places)}")
+            print(f"� Entreprises valides extraites: {len(businesses)}")
 
-                # Vérifier s'il y a une page suivante
-                next_page_token = data.get("nextPageToken")
-                print("le next page token vaut :", next_page_token)
+            # Note: Pas de nextPageToken dans Text Search API
+            print("ℹ️  Note: L'API Text Search ne supporte pas la pagination. Maximum 20 résultats par requête.")
 
-                # Si pas de token ou pas de nouveaux résultats, arrêter
-                if not next_page_token or len(places) == 0:
-                    break
+        except requests.RequestException as e:
+            print(f"Erreur réseau pour {metier} à {ville}: {e}")
+        except Exception as e:
+            print(f"Erreur inattendue pour {metier} à {ville}: {e}")
 
-                # Délai entre les pages pour respecter les limites de l'API
-                if next_page_token:
-                    time.sleep(0.2)
-
-            except requests.RequestException as e:
-                print(f"Erreur réseau pour {metier} à {ville}: {e}")
-                break
-            except Exception as e:
-                print(f"Erreur inattendue pour {metier} à {ville}: {e}")
-                break
-
-        return businesses, pagination_count
+        return businesses, request_count
 
     def _extract_business_info_new_api(self, place: Dict, metier_recherche: str) -> Dict:
         """
@@ -430,7 +419,7 @@ Format des fichiers CSV d'entrée:
         "--max-per-search",
         type=int,
         default=20,
-        help="Nombre maximum de résultats par recherche (défaut: 20, maximum: 60 avec pagination)",
+        help="Nombre maximum de résultats par recherche (défaut: 20, maximum: 20 - limitation API Text Search)",
     )
     parser.add_argument("--delay", type=float, default=0.1, help="Délai entre les requêtes en secondes (défaut: 0.1)")
     parser.add_argument("--verbose", "-v", action="store_true", help="Affichage détaillé des informations récupérées")
@@ -438,13 +427,11 @@ Format des fichiers CSV d'entrée:
     args = parser.parse_args()
 
     # Validation du paramètre max-per-search
-    if args.max_per_search > 60:
-        print("⚠️  Avertissement: L'API Google Places limite à 60 résultats maximum avec pagination.")
-        print(f"   Votre demande de {args.max_per_search} sera limitée à 60.")
-        args.max_per_search = 60
-    elif args.max_per_search > 20:
-        print(f"ℹ️  Information: Utilisation de la pagination pour obtenir {args.max_per_search} résultats.")
-        print("   (20 résultats par page, plusieurs requêtes seront effectuées)")
+    if args.max_per_search > 20:
+        print("⚠️  ATTENTION: L'API Google Places Text Search est limitée à 20 résultats maximum.")
+        print(f"   Votre demande de {args.max_per_search} sera réduite à 20 résultats par recherche.")
+        print("   � Pour plus de résultats, utilisez des termes de recherche plus spécifiques.")
+        args.max_per_search = 20
 
     # Chargement des données d'entrée
     print("Chargement des fichiers d'entrée...")
