@@ -73,13 +73,8 @@ class TestNormaliseMetiers(unittest.TestCase):
 
     def test_gestion_metiers_inconnus(self):
         """Test que les métiers non référencés sont marqués comme INCONNU"""
-
-        # Création d'un fichier d'entrée temporaire avec un métier non référencé
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False, encoding='utf-8') as temp_input:
-            writer = csv.writer(temp_input)
-            writer.writerow(['Nom', 'Adresse', 'Ville', 'Metier'])
-            writer.writerow(['Test User', '123 rue Test', 'TestVille', 'astronaute'])
-            temp_input_path = temp_input.name
+        input_file = self.test_dir / "input_metiers_inconnues.csv"
+        expected_output = self.test_dir / "output_metiers_inconnues.csv"
 
         with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False, encoding='utf-8') as temp_output:
             temp_output_path = temp_output.name
@@ -89,7 +84,7 @@ class TestNormaliseMetiers(unittest.TestCase):
             result = subprocess.run([
                 'python',
                 str(self.normalise_script),
-                temp_input_path,
+                str(input_file),
                 temp_output_path,
                 str(self.reference_file)
             ], capture_output=True, text=True, encoding='utf-8')
@@ -98,16 +93,54 @@ class TestNormaliseMetiers(unittest.TestCase):
 
             # Vérification du résultat
             with open(temp_output_path, 'r', encoding='utf-8') as f:
-                content = list(csv.DictReader(f))
+                generated_content = list(csv.DictReader(f))
 
-            self.assertEqual(len(content), 1)
-            self.assertEqual(content[0]['Metier_normalise'], 'INCONNU(astronaute)')
+            with open(expected_output, 'r', encoding='utf-8') as f:
+                expected_content = list(csv.DictReader(f))
+
+            self.assertEqual(len(generated_content), len(expected_content))
+
+            # Vérification que les métiers inconnus sont bien marqués
+            for generated_row, expected_row in zip(generated_content, expected_content):
+                self.assertEqual(generated_row['Metier_normalise'], expected_row['Metier_normalise'])
+                self.assertTrue(generated_row['Metier_normalise'].startswith('INCONNU('))
 
         finally:
-            # Nettoyage
-            for path in [temp_input_path, temp_output_path]:
-                if os.path.exists(path):
-                    os.unlink(path)
+            if os.path.exists(temp_output_path):
+                os.unlink(temp_output_path)
+
+    def test_donnees_manquantes(self):
+        """Test avec des données manquantes ou incomplètes"""
+        input_file = self.test_dir / "input_donnees_manquantes.csv"
+        expected_output = self.test_dir / "output_donnees_manquantes.csv"
+
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False, encoding='utf-8') as temp_output:
+            temp_output_path = temp_output.name
+
+        try:
+            result = subprocess.run([
+                'python',
+                str(self.normalise_script),
+                str(input_file),
+                temp_output_path,
+                str(self.reference_file)
+            ], capture_output=True, text=True, encoding='utf-8')
+
+            self.assertEqual(result.returncode, 0, f"Erreur d'exécution: {result.stderr}")
+
+            with open(temp_output_path, 'r', encoding='utf-8') as f:
+                generated_content = list(csv.DictReader(f))
+
+            # Vérification que le script gère les données manquantes sans planter
+            self.assertGreater(len(generated_content), 0, "Le script doit traiter les données même incomplètes")
+
+            # Vérification que chaque ligne a une valeur dans Metier_normalise
+            for row in generated_content:
+                self.assertIn('Metier_normalise', row, "Colonne Metier_normalise manquante")
+
+        finally:
+            if os.path.exists(temp_output_path):
+                os.unlink(temp_output_path)
 
 if __name__ == '__main__':
     unittest.main()

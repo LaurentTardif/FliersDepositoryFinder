@@ -1,0 +1,7 @@
+Nom,Adresse,Ville,Metier_normalise
+Boulangerie Ancienne,10 rue Vieille,Paris,Boulanger_Patissier
+Restaurant Classique,5 place Centrale,Lyon,Restaurant
+Coiffure Vintage,20 avenue Principale,Marseille,Coiffeur_Barbier
+Entreprise Incomplète,,Paris,
+,25 rue Sans Nom,Lyon,Restaurant
+,,Marseille,Coiffeur_Barbier

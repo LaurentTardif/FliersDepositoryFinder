@@ -1,0 +1,6 @@
+Nom,Adresse,Ville,Metier_normalise,Note,Nombre_avis,Jours_fermeture,Filtré,Raison_filtrage
+Restaurant Excellent,12 rue Bonne,Paris,Restaurant,4.8,150,1,NON,
+Coiffeur Populaire,25 avenue Mode,Lyon,Coiffeur_Barbier,4.2,80,2,NON,
+Boulangerie Artisan,8 place Marché,Marseille,Boulanger,4.5,45,0,NON,
+Restaurant Moyen,15 rue Commerce,Nice,Restaurant,4.0,25,3,NON,
+Garage Expert,30 boulevard Auto,Toulouse,Garagiste,4.7,95,1,NON,

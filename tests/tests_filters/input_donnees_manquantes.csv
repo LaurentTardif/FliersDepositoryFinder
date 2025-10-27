@@ -1,0 +1,4 @@
+Nom,Adresse,Ville,Metier_normalise,Note,Nombre_avis,Jours_fermeture
+Entreprise Sans Note,10 rue Test,Paris,,,,
+Restaurant Incomplet,20 avenue Vide,Lyon,Restaurant,,15,
+Coiffeur Partiel,30 boulevard Test,Marseille,Coiffeur_Barbier,4.0,,2

@@ -1,0 +1,4 @@
+Nom,Adresse,Ville,Metier_normalise,Note,Nombre_avis,Jours_fermeture,Filtré,Raison_filtrage
+Restaurant Mauvais,50 rue Loin,Bordeaux,Restaurant,3.8,15,2,OUI,Nombre d'avis insuffisant (< 20)
+Coiffeur Fermé,18 avenue Vide,Lille,Coiffeur_Barbier,3.5,8,5,OUI,Nombre d'avis insuffisant (< 20)
+Boulangerie Peu Connue,22 rue Cachée,Nantes,Boulanger,4.0,5,1,OUI,Nombre d'avis insuffisant (< 20)

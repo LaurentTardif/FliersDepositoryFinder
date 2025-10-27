@@ -164,12 +164,18 @@ def process_updates(historique_composite: Dict, historique_location: Dict,
     # Ordre : [données, Date_introduction, Date_verification, Filtré, Actif]
     all_fieldnames = data_fieldnames + ['Date_introduction', 'Date_verification', 'Filtré', 'Actif']
 
-    print(f"Colonnes dans le fichier de sortie: {all_fieldnames}")    # Copier l'historique existant en étendant avec les nouvelles colonnes
+    print(f"Colonnes dans le fichier de sortie: {all_fieldnames}")
+
+    # Copier l'historique existant en étendant avec les nouvelles colonnes
+    # Marquer initialement toutes les entreprises comme inactives
     for record in historique_composite.values():
         updated_record = {}
         for field in all_fieldnames:
             if field == 'Filtré' and field not in record:
                 # Valeur par défaut pour la colonne Filtré si elle n'existe pas
+                updated_record[field] = 'Non'
+            elif field == 'Actif':
+                # Marquer initialement toutes les entreprises comme inactives
                 updated_record[field] = 'Non'
             else:
                 updated_record[field] = record.get(field, '')
@@ -196,9 +202,13 @@ def process_updates(historique_composite: Dict, historique_location: Dict,
                     record.get('Metier_normalise', record.get('Metier', ''))
                 )
                 if existing_key == composite_key:
-                    # Mettre à jour la date de vérification
+                    # Mettre à jour la date de vérification et marquer comme actif
                     record['Date_verification'] = today
+                    record['Actif'] = 'Oui'  # Marquer comme actif car présent dans les candidats
                     stats['exact_matches'] += 1
+
+                    # Incrémenter le compteur pour chaque ligne modifiée (date_verification + Actif)
+                    stats['data_updates'] += 1
 
                     # Vérifier et mettre à jour les nouvelles données
                     data_updated = False
@@ -213,9 +223,6 @@ def process_updates(historique_composite: Dict, historique_location: Dict,
                                 data_updated = True
                                 if verbose:
                                     print(f"   📝 Mise à jour {field}: '{existing_value}' → '{candidat_value}'")
-
-                    if data_updated:
-                        stats['data_updates'] += 1
 
                     if verbose:
                         print(f"✅ Mis à jour: {nom} - {adresse}")
@@ -251,6 +258,8 @@ def process_updates(historique_composite: Dict, historique_location: Dict,
 
             updated_historique.append(new_entry)
             stats['new_entries'] += 1
+            # Incrémenter le compteur pour chaque nouvelle entrée (ligne modifiée)
+            stats['data_updates'] += 1
             if verbose:
                 print(f"➕ Nouvelle entrée: {nom} - {adresse}")
 

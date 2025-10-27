@@ -1,0 +1,4 @@
+Nom,Adresse,Ville,Metier,Metier_normalise
+Entreprise Incomplete,,Paris,,INCONNU()
+,25 rue Vide,Lyon,boulanger,Boulanger
+Test Entreprise,30 boulevard Test,,restaurant,Restaurant
