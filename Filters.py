@@ -111,26 +111,15 @@ def process_filter_file(input_file: str, output_file: str, verbose: bool = False
                 print("❌ Erreur: Impossible de lire les colonnes du fichier")
                 return
 
-            # Vérifier que la colonne 'Filtré' existe
-            if 'Filtré' not in fieldnames:
-                print("❌ Erreur: La colonne 'Filtré' n'existe pas dans le fichier")
+            # Vérifier que les colonnes requises sont présentes (elles doivent être créées par maj_historique)
+            required_columns = ['Filtré', 'Raison du filtre']
+            missing_columns = [col for col in required_columns if col not in fieldnames]
+
+            if missing_columns:
+                print(f"❌ Erreur: Colonnes requises manquantes: {', '.join(missing_columns)}")
+                print(f"   Le fichier d'entrée doit être généré par maj_historique.py")
                 print(f"   Colonnes disponibles: {', '.join(fieldnames)}")
                 return
-
-            # Réorganiser les colonnes pour positionner "Raison du filtre" entre "Filtré" et "Actif"
-            fieldnames_list = list(fieldnames)
-
-            # Ajouter "Raison du filtre" si elle n'existe pas déjà
-            if 'Raison du filtre' not in fieldnames_list:
-                # Trouver la position d'Actif pour insérer "Raison du filtre" juste avant
-                if 'Actif' in fieldnames_list:
-                    actif_index = fieldnames_list.index('Actif')
-                    fieldnames_list.insert(actif_index, 'Raison du filtre')
-                else:
-                    # Si 'Actif' n'existe pas, ajouter à la fin
-                    fieldnames_list.append('Raison du filtre')
-
-            fieldnames = fieldnames_list
 
             print(f"📋 Colonnes détectées: {', '.join(fieldnames)}")
 

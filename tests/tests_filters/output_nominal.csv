@@ -1,6 +1,6 @@
-Nom,Adresse,Ville,Metier_normalise,Note,Nombre_avis,Jours_fermeture,Filtré,Raison_filtrage
-Restaurant Excellent,12 rue Bonne,Paris,Restaurant,4.8,150,1,NON,
-Coiffeur Populaire,25 avenue Mode,Lyon,Coiffeur_Barbier,4.2,80,2,NON,
-Boulangerie Artisan,8 place Marché,Marseille,Boulanger,4.5,45,0,NON,
-Restaurant Moyen,15 rue Commerce,Nice,Restaurant,4.0,25,3,NON,
-Garage Expert,30 boulevard Auto,Toulouse,Garagiste,4.7,95,1,NON,
+Nom,Adresse,Ville,Metier_normalise,Heures_ouverture,Nombre_avis,Note,Jours_fermeture,Date_introduction,Date_verification,Filtré,Raison du filtre,Actif
+Restaurant Excellent,12 rue Bonne,Paris,Restaurant,lundi: 12:00 – 14:30; mardi: 12:00 – 14:30; mercredi: 12:00 – 14:30; jeudi: 12:00 – 14:30; vendredi: 12:00 – 14:30; samedi: 12:00 – 15:00; dimanche: 12:00 – 15:00,150,4.8,1,2025-10-10,2025-10-25,NON,Pas de filtre,Oui
+Coiffeur Populaire,25 avenue Mode,Lyon,Coiffeur_Barbier,lundi: 08:00 – 19:00; mardi: 08:00 – 19:00; mercredi: 08:00 – 19:00; jeudi: 08:00 – 19:00; vendredi: 08:00 – 19:00; samedi: 08:00 – 18:00; dimanche: Fermé,80,4.2,2,2025-10-12,2025-10-25,NON,Pas de filtre,Oui
+Boulangerie Artisan,8 place Marché,Marseille,Boulanger,lundi: 06:00 – 19:00; mardi: 06:00 – 19:00; mercredi: 06:00 – 19:00; jeudi: 06:00 – 19:00; vendredi: 06:00 – 19:00; samedi: 06:00 – 19:00; dimanche: 07:00 – 13:00,45,4.5,0,2025-10-14,2025-10-25,NON,Pas de filtre,Oui
+Restaurant Bon,15 rue Commerce,Nice,Restaurant,lundi: 19:00 – 23:00; mardi: 19:00 – 23:00; mercredi: 19:00 – 23:00; jeudi: 19:00 – 23:00; vendredi: 19:00 – 00:00; samedi: 19:00 – 00:00; dimanche: Fermé,25,4.6,3,2025-10-16,2025-10-25,NON,Pas de filtre,Oui
+Garage Expert,30 boulevard Auto,Toulouse,Garagiste,lundi: 08:00 – 18:00; mardi: 08:00 – 18:00; mercredi: 08:00 – 18:00; jeudi: 08:00 – 18:00; vendredi: 08:00 – 18:00; samedi: 08:00 – 12:00; dimanche: Fermé,95,4.7,1,2025-10-18,2025-10-25,NON,Pas de filtre,Oui

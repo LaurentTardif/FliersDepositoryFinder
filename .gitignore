@@ -217,3 +217,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Fichiers temporaires du projet
+# Ignore tous les fichiers commençant par temp_
+temp_*
