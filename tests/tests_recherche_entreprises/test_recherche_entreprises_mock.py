@@ -125,7 +125,7 @@ class TestRechercheEntreprisesMock(unittest.TestCase):
                     "rating": 4.0,
                     "userRatingCount": 50,
                     "location": {"latitude": 45.1885, "longitude": 5.7245},
-                    "types": ["restaurant"]
+                    "types": ["restaurant"],
                 }
             ]
             # Pas de nextPageToken car API Text Search ne supporte pas la pagination
