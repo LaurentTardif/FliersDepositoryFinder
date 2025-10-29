@@ -62,7 +62,7 @@ class TestRechercheEntreprisesArrondissements(unittest.TestCase):
 
         # Vérifications
         self.assertEqual(len(businesses), 2, "Devrait trouver 2 entreprises")
-        self.assertEqual(pagination_count, 0, "Pas de pagination pour cette réponse")
+        self.assertEqual(pagination_count, 1, "Une seule requête effectuée")
 
         # Vérification que l'API a été appelée avec la bonne requête
         mock_post.assert_called_once()
@@ -139,7 +139,7 @@ class TestRechercheEntreprisesArrondissements(unittest.TestCase):
 
         # Vérifications
         self.assertEqual(len(businesses), 0, "Ne devrait trouver aucune entreprise pour un arrondissement inexistant")
-        self.assertEqual(pagination_count, 0, "Pas de pagination")
+        self.assertEqual(pagination_count, 1, "Une seule requête effectuée")
 
         # Vérifier que l'API a quand même été appelée correctement
         mock_post.assert_called_once()

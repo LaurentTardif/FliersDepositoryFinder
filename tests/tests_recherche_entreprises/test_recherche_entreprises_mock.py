@@ -84,7 +84,7 @@ class TestRechercheEntreprisesMock(unittest.TestCase):
 
         # Vérifications
         self.assertEqual(len(businesses), 2, "Devrait trouver 2 entreprises")
-        self.assertEqual(pagination_count, 0, "Pas de pagination pour cette réponse")
+        self.assertEqual(pagination_count, 1, "Une seule requête effectuée")
 
         # Vérification du contenu
         first_business = businesses[0]
@@ -108,15 +108,15 @@ class TestRechercheEntreprisesMock(unittest.TestCase):
 
         # Vérifications
         self.assertEqual(len(businesses), 0, "Devrait ne trouver aucune entreprise")
-        self.assertEqual(pagination_count, 0, "Pas de pagination")
+        self.assertEqual(pagination_count, 1, "Une seule requête effectuée")
 
     @patch("recherche_entreprises.requests.Session.post")
     def test_pagination_mock(self, mock_post):
         """Test de la pagination avec mock"""
-        # Premier appel avec nextPageToken
-        first_response = MagicMock()
-        first_response.status_code = 200
-        first_response.json.return_value = {
+        # Réponse unique (API Text Search ne supporte plus la pagination)
+        response = MagicMock()
+        response.status_code = 200
+        response.json.return_value = {
             "places": [
                 {
                     "displayName": {"text": "Restaurant 1"},
@@ -124,37 +124,23 @@ class TestRechercheEntreprisesMock(unittest.TestCase):
                     "addressComponents": [{"types": ["locality"], "longText": "Grenoble"}],
                     "rating": 4.0,
                     "userRatingCount": 50,
-                }
-            ],
-            "nextPageToken": "next_page_token_123",
-        }
-
-        # Deuxième appel (page suivante)
-        second_response = MagicMock()
-        second_response.status_code = 200
-        second_response.json.return_value = {
-            "places": [
-                {
-                    "displayName": {"text": "Restaurant 2"},
-                    "formattedAddress": "2 rue Test, 38000 Grenoble, France",
-                    "addressComponents": [{"types": ["locality"], "longText": "Grenoble"}],
-                    "rating": 4.2,
-                    "userRatingCount": 75,
+                    "location": {"latitude": 45.1885, "longitude": 5.7245},
+                    "types": ["restaurant"]
                 }
             ]
-            # Pas de nextPageToken = fin de pagination
+            # Pas de nextPageToken car API Text Search ne supporte pas la pagination
         }
 
-        # Configuration du mock pour retourner les réponses dans l'ordre
-        mock_post.side_effect = [first_response, second_response]
+        # Configuration du mock pour retourner une seule réponse
+        mock_post.return_value = response
 
-        # Test de la recherche avec pagination
+        # Test de la recherche (sans pagination car API Text Search ne la supporte plus)
         businesses, pagination_count = self.searcher.search_businesses("restaurant", "Grenoble", 40)
 
-        # Vérifications
-        self.assertEqual(len(businesses), 2, "Devrait trouver 2 entreprises (pagination)")
-        self.assertEqual(pagination_count, 1, "Devrait avoir utilisé 1 page suivante")
-        self.assertEqual(mock_post.call_count, 2, "Devrait avoir fait 2 appels API")
+        # Vérifications - API Text Search limitée à 20 résultats maximum
+        self.assertEqual(len(businesses), 1, "Devrait trouver 1 entreprise (API Text Search limitée)")
+        self.assertEqual(pagination_count, 1, "Une seule requête effectuée")
+        self.assertEqual(mock_post.call_count, 1, "Devrait avoir fait 1 appel API")
 
     def test_extraction_ville_nouvelle_api(self):
         """Test d'extraction de ville depuis les données de la nouvelle API"""

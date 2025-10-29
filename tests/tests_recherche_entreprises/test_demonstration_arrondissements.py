@@ -128,10 +128,10 @@ class TestDemonstrationArrondissements(unittest.TestCase):
 
         # ✅ Validation des résultats
         self.assertEqual(len(businesses), 3, "Doit retourner 3 entreprises")
-        self.assertEqual(pagination_count, 0, "Pas de pagination dans cet exemple")
+        self.assertEqual(pagination_count, 1, "Une seule requête effectuée")
 
         print(f"\n📈 RÉSULTATS OBTENUS : {len(businesses)} entreprises")
-        print(f"🔄 PAGINATION : {pagination_count} tours supplémentaires")
+        print(f"🔄 REQUÊTES : {pagination_count} requête(s) effectuée(s)")
 
         # ✅ Validation du contenu de chaque entreprise
         expected_businesses = [
