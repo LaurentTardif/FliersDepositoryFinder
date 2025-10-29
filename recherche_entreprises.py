@@ -101,11 +101,7 @@ class GooglePlacesSearcher:
         print(f"🔍 Recherche: '{query}' (max {max_results} résultats)")
 
         # Payload pour la nouvelle API Places
-        payload = {
-            "textQuery": query,
-            "languageCode": "fr",
-            "maxResultCount": max_results
-        }
+        payload = {"textQuery": query, "languageCode": "fr", "maxResultCount": max_results}
 
         try:
             # Recherche avec la nouvelle API

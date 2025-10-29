@@ -1,9 +1,9 @@
-import unittest
-from unittest.mock import MagicMock, patch
-import sys
-import os
 import csv
+import os
+import sys
+import unittest
 from pathlib import Path
+from unittest.mock import MagicMock, patch
 
 # Ajouter le répertoire parent au path pour importer le module à tester
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
@@ -76,7 +76,7 @@ class TestIntegrationVillesReelles(unittest.TestCase):
                         self.assertEqual(
                             payload["textQuery"],
                             expected_query,
-                            f"Requête incorrecte pour {ville}: attendu '{expected_query}', reçu '{payload['textQuery']}'"
+                            f"Requête incorrecte pour {ville}: attendu '{expected_query}', reçu '{payload['textQuery']}'",
                         )
 
                 except Exception as e:

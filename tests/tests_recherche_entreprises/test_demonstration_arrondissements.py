@@ -2,10 +2,11 @@
 Test de démonstration pour valider que l'API Google Places fonctionne avec les arrondissements.
 Ce test simule un appel réel avec les vraies données d'entrée.
 """
-import unittest
-from unittest.mock import MagicMock, patch
+
 import sys
+import unittest
 from pathlib import Path
+from unittest.mock import MagicMock, patch
 
 # Ajouter le répertoire parent au path pour importer le module à tester
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
@@ -51,9 +52,9 @@ class TestDemonstrationArrondissements(unittest.TestCase):
                             "jeudi: 07:00–19:30",
                             "vendredi: 07:00–19:30",
                             "samedi: 07:00–19:00",
-                            "dimanche: Fermé"
+                            "dimanche: Fermé",
                         ]
-                    }
+                    },
                 },
                 {
                     "displayName": {"text": "Pâtisserie Belle Vue"},
@@ -75,9 +76,9 @@ class TestDemonstrationArrondissements(unittest.TestCase):
                             "jeudi: 06:30–20:00",
                             "vendredi: 06:30–20:00",
                             "samedi: 06:30–19:30",
-                            "dimanche: 07:00–18:00"
+                            "dimanche: 07:00–18:00",
                         ]
-                    }
+                    },
                 },
                 {
                     "displayName": {"text": "Boulangerie du Port"},
@@ -90,8 +91,8 @@ class TestDemonstrationArrondissements(unittest.TestCase):
                         {"types": ["country"], "longText": "France"},
                     ],
                     "rating": 4.2,
-                    "userRatingCount": 156
-                }
+                    "userRatingCount": 156,
+                },
             ]
         }
         mock_post.return_value = mock_response
@@ -122,11 +123,7 @@ class TestDemonstrationArrondissements(unittest.TestCase):
         print(f"   maxResultCount: {payload.get('maxResultCount', 'non spécifié')}")
 
         # ✅ Validation de la requête construite
-        self.assertEqual(
-            payload["textQuery"],
-            expected_query,
-            f"La requête doit être exactement: '{expected_query}'"
-        )
+        self.assertEqual(payload["textQuery"], expected_query, f"La requête doit être exactement: '{expected_query}'")
         self.assertEqual(payload.get("maxResultCount", limite_test), limite_test, "La limite doit être respectée")
 
         # ✅ Validation des résultats
@@ -145,7 +142,7 @@ class TestDemonstrationArrondissements(unittest.TestCase):
                 "metier": "boulanger",
                 "note": 4.5,
                 "nb_avis": 127,
-                "heures_ouverture": "lundi: 07:00–19:30; mardi: 07:00–19:30; mercredi: 07:00–19:30; jeudi: 07:00–19:30; vendredi: 07:00–19:30; samedi: 07:00–19:00; dimanche: Fermé"
+                "heures_ouverture": "lundi: 07:00–19:30; mardi: 07:00–19:30; mercredi: 07:00–19:30; jeudi: 07:00–19:30; vendredi: 07:00–19:30; samedi: 07:00–19:00; dimanche: Fermé",
             },
             {
                 "nom": "Pâtisserie Belle Vue",
@@ -154,7 +151,7 @@ class TestDemonstrationArrondissements(unittest.TestCase):
                 "metier": "boulanger",
                 "note": 4.7,
                 "nb_avis": 89,
-                "heures_ouverture": "lundi: 06:30–20:00; mardi: 06:30–20:00; mercredi: 06:30–20:00; jeudi: 06:30–20:00; vendredi: 06:30–20:00; samedi: 06:30–19:30; dimanche: 07:00–18:00"
+                "heures_ouverture": "lundi: 06:30–20:00; mardi: 06:30–20:00; mercredi: 06:30–20:00; jeudi: 06:30–20:00; vendredi: 06:30–20:00; samedi: 06:30–19:30; dimanche: 07:00–18:00",
             },
             {
                 "nom": "Boulangerie du Port",
@@ -163,8 +160,8 @@ class TestDemonstrationArrondissements(unittest.TestCase):
                 "metier": "boulanger",
                 "note": 4.2,
                 "nb_avis": 156,
-                "heures_ouverture": "Non disponible"
-            }
+                "heures_ouverture": "Non disponible",
+            },
         ]
 
         print(f"\n📋 DÉTAIL DES ENTREPRISES TROUVÉES:")

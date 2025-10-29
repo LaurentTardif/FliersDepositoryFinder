@@ -1,8 +1,8 @@
-import unittest
-from unittest.mock import MagicMock, patch
-import sys
 import os
+import sys
+import unittest
 from pathlib import Path
+from unittest.mock import MagicMock, patch
 
 # Ajouter le répertoire parent au path pour importer le module à tester
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
@@ -37,9 +37,7 @@ class TestRechercheEntreprisesArrondissements(unittest.TestCase):
                     ],
                     "rating": 4.3,
                     "userRatingCount": 87,
-                    "currentOpeningHours": {
-                        "weekdayDescriptions": ["lundi: 07:00–19:30", "mardi: 07:00–19:30"]
-                    },
+                    "currentOpeningHours": {"weekdayDescriptions": ["lundi: 07:00–19:30", "mardi: 07:00–19:30"]},
                 },
                 {
                     "displayName": {"text": "Pâtisserie Belle Vue"},
@@ -122,9 +120,7 @@ class TestRechercheEntreprisesArrondissements(unittest.TestCase):
                 expected_query = f"restaurant in {arrondissement}, France"
                 call_args = mock_post.call_args
                 payload = call_args[1]["json"]
-                self.assertEqual(
-                    payload["textQuery"], expected_query, f"Requête incorrecte pour {arrondissement}"
-                )
+                self.assertEqual(payload["textQuery"], expected_query, f"Requête incorrecte pour {arrondissement}")
 
                 # Vérifier qu'on obtient des résultats
                 self.assertGreater(len(businesses), 0, f"Devrait trouver des entreprises pour {arrondissement}")
@@ -139,9 +135,7 @@ class TestRechercheEntreprisesArrondissements(unittest.TestCase):
         mock_post.return_value = mock_response
 
         # Test avec un arrondissement inexistant
-        businesses, pagination_count = self.searcher.search_businesses(
-            "pharmacie", "Marseille, 25e arrondissement", 10
-        )
+        businesses, pagination_count = self.searcher.search_businesses("pharmacie", "Marseille, 25e arrondissement", 10)
 
         # Vérifications
         self.assertEqual(len(businesses), 0, "Ne devrait trouver aucune entreprise pour un arrondissement inexistant")
