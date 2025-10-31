@@ -1,4 +1,4 @@
-Nom,Adresse,Ville,Metier_normalise,Heures_ouverture,Nombre_avis,Note,Jours_fermeture,Date_introduction,Date_verification,Filtré,Raison du filtre,Actif
+Nom,Adresse,Ville,Metier_normalise,Heures_ouverture,Nombre_avis,Note,Jours_fermeture,Date_introduction,Date_verification,Filtré,Raison_Filtrage,Actif
 Restaurant Mauvais,50 rue Loin,Bordeaux,Restaurant,lundi: 12:00 – 14:30; mardi: 12:00 – 14:30; mercredi: 12:00 – 14:30; jeudi: 12:00 – 14:30; vendredi: 12:00 – 14:30; samedi: 12:00 – 15:00; dimanche: Fermé,15,3.8,2,2025-10-20,2025-10-25,OUI,Nombre d'avis insuffisant (< 20),Oui
 Coiffeur Fermé,18 avenue Vide,Lille,Coiffeur_Barbier,lundi: Fermé; mardi: Fermé; mercredi: 09:00 – 17:00; jeudi: 09:00 – 17:00; vendredi: 09:00 – 17:00; samedi: Fermé; dimanche: Fermé,8,3.5,5,2025-10-18,2025-10-25,OUI,Nombre d'avis insuffisant (< 20),Oui
 Boulangerie Peu Connue,22 rue Cachée,Nantes,Boulanger,lundi: 07:00 – 13:00; mardi: 07:00 – 13:00; mercredi: 07:00 – 13:00; jeudi: 07:00 – 13:00; vendredi: 07:00 – 13:00; samedi: 07:00 – 13:00; dimanche: Fermé,5,4.0,1,2025-10-19,2025-10-25,OUI,Nombre d'avis insuffisant (< 20),Oui

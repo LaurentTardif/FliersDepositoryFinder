@@ -154,7 +154,7 @@ def process_updates(
 
     # Fusionner les colonnes de l'historique et des candidats
     # Commencer par toutes les colonnes sauf les colonnes de suivi
-    tracking_fields = ["Date_introduction", "Date_verification", "Actif", "Filtré"]
+    tracking_fields = ["Date_introduction", "Date_verification", "Actif", "Filtré", "Raison_Filtrage"]
 
     # Collecter toutes les colonnes non-suivi
     data_fieldnames = []
@@ -167,8 +167,8 @@ def process_updates(
             data_fieldnames.append(field)
 
     # Construire la liste finale : colonnes de données + colonnes de suivi dans l'ordre voulu
-    # Ordre : [données, Date_introduction, Date_verification, Filtré, Actif]
-    all_fieldnames = data_fieldnames + ["Date_introduction", "Date_verification", "Filtré", "Actif"]
+    # Ordre : [données, Date_introduction, Date_verification, Filtré, Raison_Filtrage, Actif]
+    all_fieldnames = data_fieldnames + ["Date_introduction", "Date_verification", "Filtré", "Raison_Filtrage", "Actif"]
 
     print(f"Colonnes dans le fichier de sortie: {all_fieldnames}")
 
@@ -180,6 +180,9 @@ def process_updates(
             if field == "Filtré" and field not in record:
                 # Valeur par défaut pour la colonne Filtré si elle n'existe pas
                 updated_record[field] = "Non"
+            elif field == "Raison_Filtrage" and field not in record:
+                # Valeur par défaut pour la colonne Raison_Filtrage si elle n'existe pas
+                updated_record[field] = ""
             elif field == "Actif":
                 # Marquer initialement toutes les entreprises comme inactives
                 updated_record[field] = "Non"
@@ -261,6 +264,7 @@ def process_updates(
             new_entry["Date_verification"] = today
             new_entry["Actif"] = "Oui"
             new_entry["Filtré"] = "Non"  # Valeur par défaut pour les nouvelles entrées
+            new_entry["Raison_Filtrage"] = ""  # Valeur par défaut vide pour les nouvelles entrées
 
             updated_historique.append(new_entry)
             stats["new_entries"] += 1

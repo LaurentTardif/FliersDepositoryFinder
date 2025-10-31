@@ -1,4 +1,4 @@
-Nom,Adresse,Ville,Metier_normalise,Heures_ouverture,Nombre_avis,Note,Jours_fermeture,Date_introduction,Date_verification,Filtré,Raison du filtre,Actif
+Nom,Adresse,Ville,Metier_normalise,Heures_ouverture,Nombre_avis,Note,Jours_fermeture,Date_introduction,Date_verification,Filtré,Raison_Filtrage,Actif
 Restaurant Excellent,12 rue Bonne,Paris,Restaurant,lundi: 12:00 – 14:30; mardi: 12:00 – 14:30; mercredi: 12:00 – 14:30; jeudi: 12:00 – 14:30; vendredi: 12:00 – 14:30; samedi: 12:00 – 15:00; dimanche: 12:00 – 15:00,150,4.8,1,2025-10-10,2025-10-25,NON,,Oui
 Coiffeur Populaire,25 avenue Mode,Lyon,Coiffeur_Barbier,lundi: 08:00 – 19:00; mardi: 08:00 – 19:00; mercredi: 08:00 – 19:00; jeudi: 08:00 – 19:00; vendredi: 08:00 – 19:00; samedi: 08:00 – 18:00; dimanche: Fermé,80,4.2,2,2025-10-12,2025-10-25,NON,,Oui
 Boulangerie Artisan,8 place Marché,Marseille,Boulanger,lundi: 06:00 – 19:00; mardi: 06:00 – 19:00; mercredi: 06:00 – 19:00; jeudi: 06:00 – 19:00; vendredi: 06:00 – 19:00; samedi: 06:00 – 19:00; dimanche: 07:00 – 13:00,45,4.5,0,2025-10-14,2025-10-25,NON,,Oui

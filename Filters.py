@@ -114,7 +114,7 @@ def process_filter_file(input_file: str, output_file: str, verbose: bool = False
                 return
 
             # Vérifier que les colonnes requises sont présentes (elles doivent être créées par maj_historique)
-            required_columns = ["Filtré", "Raison du filtre"]
+            required_columns = ["Filtré", "Raison_Filtrage"]
             missing_columns = [col for col in required_columns if col not in fieldnames]
 
             if missing_columns:
@@ -149,7 +149,7 @@ def process_filter_file(input_file: str, output_file: str, verbose: bool = False
 
                 # Mise à jour des champs
                 record["Filtré"] = new_filtre
-                record["Raison du filtre"] = raison
+                record["Raison_Filtrage"] = raison
 
                 # Comptage pour les statistiques
                 if new_filtre == "OUI":

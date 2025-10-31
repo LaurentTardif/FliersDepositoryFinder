@@ -47,7 +47,7 @@ class TestFilters(unittest.TestCase):
             if generated_content:
                 fieldnames = generated_content[0].keys()
                 self.assertIn("Filtré", fieldnames, "Colonne 'Filtré' manquante")
-                self.assertIn("Raison du filtre", fieldnames, "Colonne 'Raison du filtre' manquante")
+                self.assertIn("Raison_Filtrage", fieldnames, "Colonne 'Raison_Filtrage' manquante")
 
         finally:
             if os.path.exists(temp_output_path):
@@ -80,7 +80,7 @@ class TestFilters(unittest.TestCase):
             # Vérification des raisons de filtrage
             for row in generated_content:
                 if row.get("Filtré", "") == "OUI":
-                    raison = row.get("Raison du filtre", "")
+                    raison = row.get("Raison_Filtrage", "")
                     self.assertNotEqual(raison, "", "Une raison de filtrage doit être fournie")
 
         finally:
@@ -115,7 +115,7 @@ class TestFilters(unittest.TestCase):
             if generated_content:
                 fieldnames = generated_content[0].keys()
                 self.assertIn("Filtré", fieldnames, "Colonne 'Filtré' manquante")
-                self.assertIn("Raison du filtre", fieldnames, "Colonne 'Raison du filtre' manquante")
+                self.assertIn("Raison_Filtrage", fieldnames, "Colonne 'Raison_Filtrage' manquante")
 
                 # Vérification que les lignes avec données manquantes ont un statut de filtrage
                 for row in generated_content:
@@ -175,7 +175,7 @@ class TestFilters(unittest.TestCase):
                     self.assertEqual(row.get("Filtré", ""), "OUI", f"{nom} devrait rester filtré")
 
                     # Vérifier que la raison a été mise à jour avec la règle automatique
-                    raison_actuelle = row.get("Raison du filtre", "")
+                    raison_actuelle = row.get("Raison_Filtrage", "")
                     self.assertEqual(raison_actuelle, attendu["nouvelle_raison"], f"{nom}: {attendu['description']}")
 
             print(f"✅ Test des entrées déjà filtrées validé: les raisons sont mises à jour par les règles automatiques")
@@ -232,7 +232,7 @@ class TestFilters(unittest.TestCase):
                     self.assertEqual(filtre_status, attendu, f"{nom} ne devrait PAS être filtré. {raison}")
 
                     # Vérifier aussi que la raison est "Pas de filtre"
-                    raison_filtrage = row.get("Raison du filtre", "")
+                    raison_filtrage = row.get("Raison_Filtrage", "")
                     self.assertEqual(raison_filtrage, "Pas de filtre", f"{nom} devrait avoir 'Pas de filtre' comme raison")
 
             # Compter les cas positifs trouvés
@@ -278,7 +278,7 @@ class TestFilters(unittest.TestCase):
 
             for row in generated_content:
                 if row.get("Filtré", "") == "OUI":
-                    raison = row.get("Raison du filtre", "")
+                    raison = row.get("Raison_Filtrage", "")
                     # Extraire le type de filtre de la raison
                     if "Nombre d'avis insuffisant" in raison:
                         raisons_comptees["avis_insuffisant"] = raisons_comptees.get("avis_insuffisant", 0) + 1

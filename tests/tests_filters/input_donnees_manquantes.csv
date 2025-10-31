@@ -1,4 +1,4 @@
-Nom,Adresse,Ville,Metier_normalise,Heures_ouverture,Nombre_avis,Note,Jours_fermeture,Date_introduction,Date_verification,Filtré,Raison du filtre,Actif
+Nom,Adresse,Ville,Metier_normalise,Heures_ouverture,Nombre_avis,Note,Jours_fermeture,Date_introduction,Date_verification,Filtré,Raison_Filtrage,Actif
 Entreprise Sans Note,10 rue Test,Paris,,,,,2025-10-20,2025-10-25,NON,,Oui
 Restaurant Incomplet,20 avenue Vide,Lyon,Restaurant,,15,,2025-10-21,2025-10-25,NON,,Oui
 Coiffeur Partiel,30 boulevard Test,Marseille,Coiffeur_Barbier,,4.0,2,2025-10-22,2025-10-25,NON,,Oui
